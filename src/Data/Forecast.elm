@@ -4,10 +4,22 @@ import Json.Decode exposing (int, string, float, Decoder, list)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 
 
+type alias Forecast =
+    { query : Query
+    }
+
+
+forecastDecoder : Decoder Forecast
+forecastDecoder =
+    decode Forecast
+        |> required "query" queryDecoder
+
+
 type alias Query =
     { count : Int
     , created : String
     , lang : String
+    , results : Results
     }
 
 
@@ -17,6 +29,18 @@ queryDecoder =
         |> required "count" int
         |> required "created" string
         |> required "lang" string
+        |> required "results" resultsDecoder
+
+
+type alias Results =
+    { results : Channel
+    }
+
+
+resultsDecoder : Decoder Results
+resultsDecoder =
+    decode Results
+        |> required "channel" channelDecoder
 
 
 type alias Channel =
